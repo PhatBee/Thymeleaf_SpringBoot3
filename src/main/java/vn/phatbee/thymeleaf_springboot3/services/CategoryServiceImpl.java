@@ -59,20 +59,20 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public <S extends Category> S save(S entity) {
-        if (entity.getId() != null) {
+//        if (entity.getId() != null) {
+//            return categoryRepository.save(entity);
+//        } else {
+//            Optional<Category> opt = findById(entity.getId());
+//            if (opt.isPresent()) {
+//                if (StringUtils.isEmpty(entity.getName())) {
+//                    entity.setName(opt.get().getName());
+//                } else {
+//                    // Lấy lại images cũ
+//                    entity.setName(entity.getName());
+//                }
+//            }
             return categoryRepository.save(entity);
-        } else {
-            Optional<Category> opt = findById(entity.getId());
-            if (opt.isPresent()) {
-                if (StringUtils.isEmpty(entity.getName())) {
-                    entity.setName(opt.get().getName());
-                } else {
-                    // Lấy lại images cũ
-                    entity.setName(entity.getName());
-                }
-            }
-            return categoryRepository.save(entity);
-        }
+
     }
 
     @Override

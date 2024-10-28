@@ -30,7 +30,7 @@ public class CategoryController {
     CategoryService categoryService;
 
     @RequestMapping("")
-    public String all(Model model){
+    public String all(ModelMap model){
         List<Category> list = categoryService.findAll();
         model.addAttribute("list", list);
         return "admin/category/list";
@@ -48,13 +48,13 @@ public class CategoryController {
             return "admin/category/add";
         }
         categoryService.save(category);
-        return "redirect:admin/categories";
+        return "redirect:/admin/categories";
     }
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") long id, Model model){
         categoryService.deleteById(id);
-        return "redirect:admin/categories";
+        return "redirect:/admin/categories";
     }
 
     @GetMapping("/edit/{id}")

@@ -18,6 +18,7 @@
     <th>STT</th>
     <th>Category name</th>
     <th>Image</th>
+    <th>Status</th>
     <th>Modify</th>
   </tr>
 
@@ -29,6 +30,7 @@
     <td>
       <img th:src="@{category.images}"/>
     </td>
+    <td th:text="${category.status}"></td>
     <td>
       <a th:href="@{/admin/categories/edit/{id}(id=${category.id})}" class="center">Edit</a>
       <a th:href="@{/admin/categories/delete/{id}(id=${category.id})}" class="center">Delete</a>

@@ -19,6 +19,10 @@
     <label for="images">Img</label>
     <input type="text" th:field="*{images}" id="images" placeholder="Images">
     <span th:if="${#fields.hasErrors('images')}" th:errors="*{images}"></span>
+
+    <label for="status">Status</label>
+    <input type="text" th:field="*{status}" id="status" placeholder="Status">
+    <span th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></span>
     <input type="submit" value="Add Category">
 </form>
 
