@@ -1,5 +1,6 @@
 package vn.phatbee.thymeleaf_springboot3.services;
 
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,4 +27,13 @@ public interface CategoryService {
     <S extends Category> S save(S entity);
 
     Optional<Category> findById(Long aLong);
+
+
+    <S extends Category> Optional<S> findOne(Example<S> example);
+
+    void delete(Category entity);
+
+    void deleteAll();
+
+    List<Category> findAllById(Iterable<Long> longs);
 }
