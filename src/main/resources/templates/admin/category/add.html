@@ -12,10 +12,10 @@
 <body>
 <header th:replace="/layout/header :: header"></header>
 
-<form action="#" th:action="@{/categories/add}" th:object="${category}" method="post">
+<form action="#" th:action="@{/admin/categories/add}" th:object="${category}" method="post">
     <label for="name">Name</label>
     <input type="text" th:field="*{name}" id="name" placeholder="Name">
-    <span th:if="${#fields.hasErrors('categoryname')}" th:errors="*{name}"></span>
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
     <label for="images">Img</label>
     <input type="text" th:field="*{images}" id="images" placeholder="Images">
     <span th:if="${#fields.hasErrors('images')}" th:errors="*{images}"></span>

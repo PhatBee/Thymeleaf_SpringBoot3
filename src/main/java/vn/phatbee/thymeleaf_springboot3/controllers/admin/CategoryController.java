@@ -36,115 +36,157 @@ public class CategoryController {
         return "admin/category/list";
     }
 
-    @GetMapping("/add")
-    public String add(Model model){
-        CategoryModel cateModel = new CategoryModel();
-        cateModel.setIsEdit(false);
-        model.addAttribute("category", cateModel);
-        return "admin/category/addOrEdit";
+    @GetMapping("/signup")
+    public String signup(Category category, ModelMap modelMap){
+        modelMap.addAttribute("category", category);
+        return "admin/category/add";
     }
 
-    @PostMapping("saveOrUpdate")
-    public ModelAndView saveOrUpdate(ModelMap model, @Valid @ModelAttribute("category") CategoryModel cateModel, BindingResult result){
-        if(result.hasErrors()){
-            return new ModelAndView("admin/category/addOrEdit");
+    @PostMapping("/add")
+    public String add(@Valid Category category, BindingResult result, Model model){
+        if (result.hasErrors()) {
+            return "admin/category/add";
         }
-        Category entity = new Category();
-
-        // Copy từ model sang enity
-        BeanUtils.copyProperties(cateModel, entity);
-
-        // Gọi hàm save trong service
-        categoryService.save(entity);
-
-        // Đưa thông báo về cho message
-        String message = "";
-        if (cateModel.getIsEdit()) {
-            message = "Category edited successfully";
-        } else {
-            message = "Category is saved successfully";
-        }
-        model.addAttribute("message", message);
-
-        // Redirect về URL Controller
-        return new ModelAndView("forward:/admin/categories/searchpaginted", model);
+        categoryService.save(category);
+        return "redirect:admin/categories";
     }
 
-    @GetMapping("edit/{id}")
-    public ModelAndView edit(ModelMap model, @PathVariable("id") Long categoryId ){
-        Optional<Category> optCategory = categoryService.findById(categoryId);
-        CategoryModel cateModel = new CategoryModel();
-
-        // Kiểm tra sự tồn tại của category
-        if(optCategory.isPresent()){
-            Category entity = optCategory.get();
-
-            // Copy từ entity sang Model
-            BeanUtils.copyProperties(entity, cateModel);
-            cateModel.setIsEdit(true);
-
-            // Đẩy dữ liệu ra view
-            model.addAttribute("category", cateModel);
-
-            return new ModelAndView("admin/category/addOrEdit", model);
-        }
-        model.addAttribute("message", "Category not found");
-        return new ModelAndView("forward:/admin/categories", model);
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") long id, Model model){
+        categoryService.deleteById(id);
+        return "redirect:admin/categories";
     }
 
-    @GetMapping("delete/{id}")
-    public ModelAndView delete(ModelMap model, @PathVariable("id") Long categoryId){
-        categoryService.deleteById(categoryId);
-        model.addAttribute("message", "Category deleted successfully");
-        return new ModelAndView("forward:/admin/categories/searchpaginted", model);
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable("id") long id, Model model){
+        Category category = categoryService.findById(id)
+                .orElseThrow(() -> new RuntimeException("Not found"));
+        model.addAttribute("category", category);
+        return "admin/category/update";
     }
 
-    @GetMapping("search")
-    public String search(ModelMap model, @RequestParam(name = "name", required = false) String name){
-        List<Category> list = null;
-
-        // Có nội dung truyền về không, name là tuỳ chọn khi require = false
-        if(StringUtils.hasText(name)){
-            list = categoryService.findByNameContaining(name);
-        } else{
-            list = categoryService.findAll();
+    @PostMapping("/update/{id}")
+    public String update(@PathVariable("id") long id, @Valid Category category, BindingResult result,
+                         Model model){
+        if (result.hasErrors()){
+            return "admin/category/update";
         }
-        model.addAttribute("categories", list);
-        return "admin/categories/search";
-
+        categoryService.save(category);
+        return "admin/category/list";
     }
 
-    @RequestMapping("searchpaginated")
-    public String search(ModelMap model, @RequestParam(name = "name", required = false) String name,
-                         @RequestParam("page") Optional<Integer> page,
-                         @RequestParam("size") Optional<Integer> size){
-        int count = (int) categoryService.count();
-        int currentPage = page.orElse(1);
-        int pageSize = size.orElse(3);
-        Pageable pageable = (Pageable) PageRequest.of(currentPage-1, pageSize, Sort.by("name"));
-        Page<Category> resultPage = null;
-        if (StringUtils.hasText(name)){
-            resultPage = categoryService.findByNameContaining(name, pageable);
-            model.addAttribute("name", name);
-        } else{
-            resultPage = categoryService.findAll(pageable);
-        }
 
-        int totalPages = resultPage.getTotalPages();
-        if(totalPages > 0) {
-            int start = Math.max(1, currentPage - 2);
-            int end = Math.min(currentPage + 2, totalPages);
-            if (totalPages > count) {
-                if (end == totalPages) start = end - count;
-                else if (start == 1) end = start + count;
-            }
-            List<Integer> pageNumbers = IntStream.rangeClosed(start, end)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers",pageNumbers);
-        }
-        model.addAttribute("categoryPage",resultPage);
-        return "admin/category/searchpaginated";
-    }
+//    @GetMapping("/add")
+//    public String add(Model model){
+//        CategoryModel cateModel = new CategoryModel();
+//        cateModel.setIsEdit(false);
+//        model.addAttribute("category", cateModel);
+//        return "admin/category/addOrEdit";
+//    }
+
+//    @PostMapping("saveOrUpdate")
+//    public ModelAndView saveOrUpdate(ModelMap model, @Valid @ModelAttribute("category") CategoryModel cateModel, BindingResult result){
+//        if(result.hasErrors()){
+//            return new ModelAndView("admin/category/addOrEdit");
+//        }
+//        Category entity = new Category();
+//
+//        // Copy từ model sang enity
+//        BeanUtils.copyProperties(cateModel, entity);
+//
+//        // Gọi hàm save trong service
+//        categoryService.save(entity);
+//
+//        // Đưa thông báo về cho message
+//        String message = "";
+//        if (cateModel.getIsEdit()) {
+//            message = "Category edited successfully";
+//        } else {
+//            message = "Category is saved successfully";
+//        }
+//        model.addAttribute("message", message);
+//
+//        // Redirect về URL Controller
+//        return new ModelAndView("forward:/admin/categories/searchpaginted", model);
+//    }
+//
+//    @GetMapping("edit/{id}")
+//    public ModelAndView edit(ModelMap model, @PathVariable("id") Long categoryId ){
+//        Optional<Category> optCategory = categoryService.findById(categoryId);
+//        CategoryModel cateModel = new CategoryModel();
+//
+//        // Kiểm tra sự tồn tại của category
+//        if(optCategory.isPresent()){
+//            Category entity = optCategory.get();
+//
+//            // Copy từ entity sang Model
+//            BeanUtils.copyProperties(entity, cateModel);
+//            cateModel.setIsEdit(true);
+//
+//            // Đẩy dữ liệu ra view
+//            model.addAttribute("category", cateModel);
+//
+//            return new ModelAndView("admin/category/addOrEdit", model);
+//        }
+//        model.addAttribute("message", "Category not found");
+//        return new ModelAndView("forward:/admin/categories", model);
+//    }
+
+//    @GetMapping("delete/{id}")
+//    public ModelAndView delete(ModelMap model, @PathVariable("id") Long categoryId){
+//        categoryService.deleteById(categoryId);
+//        model.addAttribute("message", "Category deleted successfully");
+//        return new ModelAndView("forward:/admin/categories/searchpaginted", model);
+//    }
+
+
+
+//    @GetMapping("search")
+//    public String search(ModelMap model, @RequestParam(name = "name", required = false) String name){
+//        List<Category> list = null;
+//
+//        // Có nội dung truyền về không, name là tuỳ chọn khi require = false
+//        if(StringUtils.hasText(name)){
+//            list = categoryService.findByNameContaining(name);
+//        } else{
+//            list = categoryService.findAll();
+//        }
+//        model.addAttribute("categories", list);
+//        return "admin/categories/search";
+//
+//    }
+
+//    @RequestMapping("searchpaginated")
+//    public String search(ModelMap model, @RequestParam(name = "name", required = false) String name,
+//                         @RequestParam("page") Optional<Integer> page,
+//                         @RequestParam("size") Optional<Integer> size){
+//        int count = (int) categoryService.count();
+//        int currentPage = page.orElse(1);
+//        int pageSize = size.orElse(3);
+//        Pageable pageable = (Pageable) PageRequest.of(currentPage-1, pageSize, Sort.by("name"));
+//        Page<Category> resultPage = null;
+//        if (StringUtils.hasText(name)){
+//            resultPage = categoryService.findByNameContaining(name, pageable);
+//            model.addAttribute("name", name);
+//        } else{
+//            resultPage = categoryService.findAll(pageable);
+//        }
+//
+//        int totalPages = resultPage.getTotalPages();
+//        if(totalPages > 0) {
+//            int start = Math.max(1, currentPage - 2);
+//            int end = Math.min(currentPage + 2, totalPages);
+//            if (totalPages > count) {
+//                if (end == totalPages) start = end - count;
+//                else if (start == 1) end = start + count;
+//            }
+//            List<Integer> pageNumbers = IntStream.rangeClosed(start, end)
+//                    .boxed()
+//                    .collect(Collectors.toList());
+//            model.addAttribute("pageNumbers",pageNumbers);
+//        }
+//        model.addAttribute("categoryPage",resultPage);
+//        return "admin/category/searchpaginated";
+//    }
 
 }

@@ -12,14 +12,14 @@
 <body>
 <header th:replace="/layout/header :: header"></header>
 
-<form action="#" th:action="@{/categories/update}" th:object="${category}" method="post">
+<form action="#" th:action="@{/admin/categories/update/{id}(id=${category.id})}" th:object="${category}" method="post">
     <label for="name">Name</label>
     <input type="text" th:field="*{name}" id="name" placeholder="Name">
     <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
     <label for="images">Img</label>
     <input type="text" th:field="*{images}" id="images" placeholder="Images">
     <span th:if="${#fields.hasErrors('images')}" th:errors="*{images}"></span>
-    <input type="submit" value="Add Category">
+    <input type="submit" value="Upload Category">
 </form>
 
 <footer th:replace="/layout/footer :: footer"></footer>
