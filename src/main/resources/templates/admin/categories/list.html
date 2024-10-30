@@ -28,7 +28,7 @@
     </div>
 
     <div th:if="${categoryPage.hasContent()}">
-        <table>
+        <table border="1" width="100%">
             <tr>
                 <th>STT</th>
                 <th>Category name</th>
@@ -38,7 +38,7 @@
                 <td th:text="${status.index + 1}"></td>
                 <td th:text="${cate.name}"></td>
                 <td>
-                    <a th:href="@{/admin/categories/edit/{id}(id=${cate.id})}">Edit</a>
+                    <a th:href="@{/admin/categories/edit/{id}(id=${cate.id})}">Edit</a> |
                     <a th:href="@{/admin/categories/delete/{id}(id=${cate.id})}">Delete</a>
                 </td>
             </tr>
@@ -57,7 +57,7 @@
     </form>
 
     <div th:if="${categoryPage.totalPages > 0}">
-        <ul>
+        <ul style="list-style: none; padding: 0; display: flex; gap: 5px">
             <li th:each="pageNumber : ${pageNumbers}"
                 th:class="${pageNumber == categoryPage.number + 1 ? 'page-item active' : 'page-item'}">
                 <a th:href="@{/admin/categories/searchpaginated(name=${name}, size=${categoryPage.size}, page=${pageNumber})}"
