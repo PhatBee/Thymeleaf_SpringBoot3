@@ -23,7 +23,5 @@ public class Category implements Serializable {
     @Column(name = "categoryname", columnDefinition = "nvarchar(50)")
     @NotEmpty(message = "Không được bỏ trống")
     private String name;
-    @Column(name="images", columnDefinition = "nvarchar(500)")
-    private String images;
-    private int status;
+
 }

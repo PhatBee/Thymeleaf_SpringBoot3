@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf</title>
+</head>
+<body>
+<!-- Header Section -->
+<header class="row">
+    <div class="col">
+        <div th:replace="~{admin/fragments/header :: header}"></div>
+    </div>
+</header>
+
+<!-- Main Content Section -->
+<main class="container">
+    <!-- Content Section -->
+    <section class="row mt-4">
+        <div class="col mt-5 mb-5">
+            <div layout:fragment="content"></div>
+        </div>
+    </section>
+</main>
+
+<!-- Footer Section -->
+<footer class="row">
+    <div class="col">
+        <div th:replace="~{admin/fragments/footer :: footer}"></div>
+    </div>
+</footer>
+</body>
+</html>

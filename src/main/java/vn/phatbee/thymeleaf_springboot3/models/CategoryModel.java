@@ -18,8 +18,7 @@ public class CategoryModel implements Serializable {
     private Long id;
     @NotEmpty(message = "Không được bỏ trống")
     private String name;
-    private String images;
-    private int status;
+   
 
     private Boolean isEdit = false;
 
